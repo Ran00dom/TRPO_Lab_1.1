@@ -20,9 +20,13 @@ enum Command
 
 class MyApplication : public QCoreApplication
 {
+    Q_OBJECT
+
 private:
-    int timerID;
+    int consolTimer;
+    int listenTimer;
     bool listenFile = false;
+
     FileManager manager;
     Loger log;
 
@@ -42,8 +46,8 @@ public:
 
 private:
     bool listen();
-    void connectFileLog(FileInfoRecorder*);
-    void disconnectFileLog(FileInfoRecorder*);
+    FileInfoRecorder* connectFileLog(FileInfoRecorder*);
+    FileInfoRecorder* disconnectFileLog(FileInfoRecorder*);
 
     bool listenCommand(std::string);
      int commandCheck(std::string);
@@ -52,6 +56,8 @@ private:
 
 
     void timerEvent(QTimerEvent*); // переопределение для таймера
+signals:
+    void update();
 };
 
 #endif // MYAPPLICATION_H

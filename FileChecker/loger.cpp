@@ -4,10 +4,9 @@
 
 void Loger::logFileUpdate(QFileInfo* file)
 {
-    if (file != nullptr)
-        if (file->exists())
+    if (file != nullptr) {
             qDebug() << file->baseName() << "STATUS / exist? " << file->exists() << " / size?  " << file->size();
-
+    }
 }
 
 void Loger::logList(string name, TypeMessage type , int sizeX , int sizeY , string* columName, string** table)

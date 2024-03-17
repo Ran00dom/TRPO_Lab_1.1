@@ -4,6 +4,7 @@
 #include <QFileInfo>
 #include <QDateTime>
 #include <QObject>
+#include <QDebug>
 
 class FileInfoRecorder:public QObject
 {
@@ -23,7 +24,7 @@ public:
     FileInfoRecorder* getNext();
 
 signals:
-    void logedStatus();
+    void logedStatus(QFileInfo*);
 
 public slots:
     void updateData();
@@ -40,8 +41,9 @@ private:
 public:
     FileManager(){};
     FileInfoRecorder* addFile(const char* dir);
-    FileInfoRecorder* removeFile(const char* dir);
+    FileInfoRecorder* removeFile(const char* dir){return nullptr;};
     FileInfoRecorder* removeFile(int index);
+    FileInfoRecorder* removeFile(FileInfoRecorder*);
     FileInfoRecorder* getFile(int);
 };
 

@@ -1,9 +1,11 @@
 #include "file.h"
+#include <iostream>
 
 FileInfoRecorder::FileInfoRecorder(const char* parth, FileInfoRecorder* next):QObject()
 {
     file = new QFileInfo(parth);
     if (file != nullptr) {
+        std::cout << "File create!" << std::endl;
         exist = file->exists();
         timeModified = file->lastModified();
         this->next = next;
@@ -23,11 +25,15 @@ bool FileInfoRecorder::addNext(FileInfoRecorder* next)
 
 void FileInfoRecorder::updateData()
 {
+    std::cout << "update" << std::endl;
+    file->refresh();
     bool updateExist = file->exists();
     QDateTime lastTimeModified = file->lastModified();
 
     if (updateExist != exist || lastTimeModified != timeModified) {
-        emit logedStatus();
+        exist = updateExist;
+        timeModified = lastTimeModified;
+        emit logedStatus(this->file);
     }
 }
 
@@ -83,6 +89,36 @@ FileInfoRecorder* FileManager::removeFile(int index)
     return nullptr;
 }
 
+FileInfoRecorder* FileManager::removeFile(FileInfoRecorder* file)
+{
+    FileInfoRecorder* back = nullptr;
+    count--;
+    for (FileInfoRecorder* ptr = headList ; ptr != nullptr ;  back = ptr, ptr = ptr->getNext())
+        if (file == ptr)
+            if (ptr == headList){
+                ptr = ptr->getNext();
+                delete headList;
+                headList = ptr;
+                return ptr;
+            }
+            else {
+                if (ptr == tail){
+                    tail = back;
+                    back->addNext(nullptr);
+                    delete ptr;
+                    return tail;
+                }
+                else {
+                    ptr = ptr->getNext();
+                    delete back->getNext();
+                    back->addNext(ptr);
+                    return back->getNext();
+                }
+            }
+    return nullptr;
+}
+
+
 FileInfoRecorder*  FileManager::getFile(int index) // получить элемент списка
 {
      int i = 0;
@@ -91,3 +127,4 @@ FileInfoRecorder*  FileManager::getFile(int index) // получить элем�
             return ptr;
     return nullptr;
 }
+
