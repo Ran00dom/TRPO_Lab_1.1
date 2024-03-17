@@ -17,11 +17,29 @@ private:
 
 public:
     FileInfoRecorder(const char* parth, FileInfoRecorder* next);
+    virtual ~FileInfoRecorder(){};
+    bool addNext(FileInfoRecorder*);
+    FileInfoRecorder* getNext();
 signals:
     int logedStatus(QFileInfo* file);
 public slots:
     bool updateData();
 
+};
+
+class FileManager
+{
+private:
+    FileInfoRecorder* headList= nullptr;
+    FileInfoRecorder* tail = nullptr;
+    int count{0};
+
+public:
+    FileManager(){};
+    virtual ~FileManager(){};
+    FileInfoRecorder* addFile(const char* dir);
+    FileInfoRecorder* removeFile(const char* dir);
+    FileInfoRecorder* removeFile(int index);
 };
 
 #endif // FILE_H
