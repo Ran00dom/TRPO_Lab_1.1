@@ -5,25 +5,28 @@
 #include <QDateTime>
 #include <QObject>
 
-class FileInfoRecorder:public QFileInfo
+class FileInfoRecorder:public QObject
 {
-    // макрос для компиляции слотов и сигналов
+    Q_OBJECT // макрос для компиляции слотов и сигналов
 private:
     bool exist = false;
     QDateTime timeModified;
     qint64 size;
+    QFileInfo* file;
 
     FileInfoRecorder* next;
 
 public:
     FileInfoRecorder(const char* parth, FileInfoRecorder* next);
-    virtual ~FileInfoRecorder(){};
+    virtual ~FileInfoRecorder(){delete file;};
     bool addNext(FileInfoRecorder*);
     FileInfoRecorder* getNext();
+
 signals:
-    //int logedStatus();
+    void logedStatus();
+
 public slots:
-    //bool updateData();
+    void updateData();
 
 };
 

@@ -1,26 +1,16 @@
 #include "file.h"
 
-FileInfoRecorder::FileInfoRecorder(const char* parth, FileInfoRecorder* next):QFileInfo(parth)
+FileInfoRecorder::FileInfoRecorder(const char* parth, FileInfoRecorder* next):QObject()
 {
-    exist = exists();
-    timeModified = lastModified();
-    this->next = next;
-    this->size = QFileInfo::size();
-}
-
-/*
-bool FileInfoRecorder::updateData()
-{
-    bool updateExist = exists();
-    QDateTime lastTimeModified = lastModified();
-
-    if (updateExist != exist || lastTimeModified != timeModified) {
-        //logedStatus();
-        return true;
+    file = new QFileInfo(parth);
+    if (file != nullptr) {
+        exist = file->exists();
+        timeModified = file->lastModified();
+        this->next = next;
+        this->size = file->size();
     }
-    return false;
 }
-*/
+
 bool FileInfoRecorder::addNext(FileInfoRecorder* next)
 {
     this->next = next;
@@ -29,6 +19,16 @@ bool FileInfoRecorder::addNext(FileInfoRecorder* next)
     }
     else
         return false;
+}
+
+void FileInfoRecorder::updateData()
+{
+    bool updateExist = file->exists();
+    QDateTime lastTimeModified = file->lastModified();
+
+    if (updateExist != exist || lastTimeModified != timeModified) {
+        emit logedStatus();
+    }
 }
 
 FileInfoRecorder* FileInfoRecorder::getNext()
@@ -57,6 +57,7 @@ FileInfoRecorder* FileManager::removeFile(int index)
 {
     int i = 0;
     FileInfoRecorder* back = nullptr;
+    count--;
     for (FileInfoRecorder* ptr = headList ; ptr != nullptr ;  back = ptr, ptr = ptr->getNext(), i++)
         if (i == index)
             if (ptr == headList){

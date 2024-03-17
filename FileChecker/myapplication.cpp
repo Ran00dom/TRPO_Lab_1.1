@@ -34,7 +34,7 @@ bool MyApplication::listenCommand(std::string str) // определяет и в
                     if (manager.addFile(command[2].c_str()) == nullptr)
                         log.logList("File dont add!", ERRORS);
                     else
-                        log.logList("File add!", ACCEPT);
+                        log.logList("File dont add!", ACCEPT);
                 }
                 else
                 {
@@ -83,7 +83,7 @@ int MyApplication::commandCheck(std::string str) // проверка индек�
 {
     for (int i = 0; i < 7 ; i++) {
         if (str == commands[i])
-            return i;  
+            return i;
     }
     return -1;
 }

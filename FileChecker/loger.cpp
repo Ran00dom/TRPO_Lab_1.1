@@ -4,8 +4,10 @@
 
 void Loger::logFileUpdate(QFileInfo* file)
 {
-    if (file->exists())
-        qDebug() << file->baseName() << "STATUS / exist? " << file->exists() << " / size?  " << file->size();
+    if (file != nullptr)
+        if (file->exists())
+            qDebug() << file->baseName() << "STATUS / exist? " << file->exists() << " / size?  " << file->size();
+
 }
 
 void Loger::logList(string name, TypeMessage type , int sizeX , int sizeY , string* columName, string** table)
@@ -36,7 +38,7 @@ void Loger::logList(string name, TypeMessage type , int sizeX , int sizeY , stri
         cout << name << endl;
     }
     else{
-        qDebug() << "<< " << &name << ">>";
+        cout << "<< " << &name << ">>" << endl;
 
 
         for (int i = 0; i < sizeX; i++)

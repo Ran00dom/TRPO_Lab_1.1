@@ -17,14 +17,16 @@ enum TypeMessage
 };
 
 
-class Loger
+class Loger:public QObject
 {
+    Q_OBJECT
 
 private:
     void setColor(TypeMessage = INFO);
 
 public:
-    Loger(){};
+    Loger():QObject(){};
+    virtual ~Loger(){};
     void logList(string name,  TypeMessage type = INFO ,int sizeX = 0, int sizeY = 0, string* columName = nullptr, string** table = nullptr);
 
 public slots:
