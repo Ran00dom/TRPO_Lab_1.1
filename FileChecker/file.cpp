@@ -8,18 +8,19 @@ FileInfoRecorder::FileInfoRecorder(const char* parth, FileInfoRecorder* next):QF
     this->size = QFileInfo::size();
 }
 
+/*
 bool FileInfoRecorder::updateData()
 {
     bool updateExist = exists();
     QDateTime lastTimeModified = lastModified();
 
     if (updateExist != exist || lastTimeModified != timeModified) {
-        logedStatus(this);
+        //logedStatus();
         return true;
     }
     return false;
 }
-
+*/
 bool FileInfoRecorder::addNext(FileInfoRecorder* next)
 {
     this->next = next;
@@ -87,4 +88,5 @@ FileInfoRecorder*  FileManager::getFile(int index) // получить элем�
     for (FileInfoRecorder* ptr = headList ; ptr != nullptr ; ptr = ptr->getNext(), i++)
         if (index == i)
             return ptr;
+    return nullptr;
 }

@@ -7,7 +7,7 @@
 
 class FileInfoRecorder:public QFileInfo
 {
-    Q_OBJECT // макрос для компиляции слотов и сигналов
+    // макрос для компиляции слотов и сигналов
 private:
     bool exist = false;
     QDateTime timeModified;
@@ -21,9 +21,9 @@ public:
     bool addNext(FileInfoRecorder*);
     FileInfoRecorder* getNext();
 signals:
-    int logedStatus(QFileInfo* file);
+    //int logedStatus();
 public slots:
-    bool updateData();
+    //bool updateData();
 
 };
 
@@ -36,10 +36,10 @@ private:
 
 public:
     FileManager(){};
-    virtual ~FileManager(){};
     FileInfoRecorder* addFile(const char* dir);
     FileInfoRecorder* removeFile(const char* dir);
     FileInfoRecorder* removeFile(int index);
+    FileInfoRecorder* getFile(int);
 };
 
 #endif // FILE_H

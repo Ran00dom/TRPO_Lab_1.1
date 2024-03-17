@@ -30,8 +30,11 @@ bool MyApplication::listenCommand(std::string str) // определяет и в
             switch (commandCheck(command[1])) {  // поиск параметра по индексу
 
             case COMMAND_ADD:
-                if (countWord > 1 && countWord < 3) {
-                    // add file
+                if (countWord > 2 && countWord < 4) {
+                    if (manager.addFile(command[2].c_str()) == nullptr)
+                        log.logList("File dont add!", ERRORS);
+                    else
+                        log.logList("File add!", ACCEPT);
                 }
                 else
                 {
@@ -67,7 +70,7 @@ bool MyApplication::listenCommand(std::string str) // определяет и в
             }
             break;
             default: // исключение
-                std::cout << "ERROR: Command not difined!" << std::endl;
+                log.logList("Command not difined!", WARNING);
                 return false;
 
             }
