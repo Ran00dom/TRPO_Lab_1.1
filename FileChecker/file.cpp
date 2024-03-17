@@ -62,17 +62,29 @@ FileInfoRecorder* FileManager::removeFile(int index)
                 ptr = ptr->getNext();
                 delete headList;
                 headList = ptr;
+                return ptr;
             }
             else {
                 if (ptr == tail){
                     tail = back;
                     back->addNext(nullptr);
                     delete ptr;
+                    return tail;
                 }
                 else {
                     ptr = ptr->getNext();
                     delete back->getNext();
                     back->addNext(ptr);
+                    return back->getNext();
                 }
             }
+    return nullptr;
+}
+
+FileInfoRecorder*  FileManager::getFile(int index) // получить элемент списка
+{
+     int i = 0;
+    for (FileInfoRecorder* ptr = headList ; ptr != nullptr ; ptr = ptr->getNext(), i++)
+        if (index == i)
+            return ptr;
 }

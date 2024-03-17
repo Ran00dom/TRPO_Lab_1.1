@@ -1,6 +1,8 @@
 #ifndef MYAPPLICATION_H
 #define MYAPPLICATION_H
 
+#include "file.h"
+#include "loger.h"
 #include <QCoreApplication>
 #include <iostream>
 
@@ -21,6 +23,9 @@ class MyApplication : public QCoreApplication
 private:
     int timerID;
     bool listenFile = false;
+    FileManager manager;
+    Loger log;
+
     const std::string commands[7] =
         {
             "/file",
@@ -37,8 +42,8 @@ public:
 
 private:
     bool listen();
-    void connectFileLog(int*, int*);
-    void disconnectFileLog(int*, int*);
+    void connectFileLog(FileInfoRecorder*);
+    void disconnectFileLog(FileInfoRecorder*);
 
     bool listenCommand(std::string);
      int commandCheck(std::string);
