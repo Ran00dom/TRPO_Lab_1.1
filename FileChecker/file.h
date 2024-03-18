@@ -28,7 +28,7 @@ signals:
     void logedStatus(QFileInfo*);
 
 public slots:
-    void updateData();
+    void updateData(bool forcibly = false);
 
 };
 

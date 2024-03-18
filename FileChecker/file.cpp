@@ -20,14 +20,14 @@ bool FileInfoRecorder::addNext(FileInfoRecorder* next)
         return false;
 }
 
-void FileInfoRecorder::updateData()
+void FileInfoRecorder::updateData(bool forcibly)
 {
     std::cout << "update" << std::endl;
     file->refresh();
     bool updateExist = file->exists();
     QDateTime lastTimeModified = file->lastModified();
 
-    if (updateExist != exist || lastTimeModified != timeModified) {
+    if (updateExist != exist || lastTimeModified != timeModified || forcibly) {
         exist = updateExist;
         timeModified = lastTimeModified;
         emit logedStatus(this->file);

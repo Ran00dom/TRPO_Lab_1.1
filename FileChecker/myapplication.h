@@ -64,7 +64,7 @@ private:
 
     void timerEvent(QTimerEvent*); // переопределение для таймера
 signals:
-    void update();
+    void update(bool forcibly = false);
 };
 
 #endif // MYAPPLICATION_H
