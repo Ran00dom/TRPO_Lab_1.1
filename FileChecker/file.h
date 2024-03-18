@@ -23,6 +23,7 @@ public:
     bool addNext(FileInfoRecorder*);
     bool isFileName(const char* name);
     FileInfoRecorder* getNext();
+    bool reset(const char* dir);
 
 signals:
     void logedStatus(QFileInfo*);
@@ -47,6 +48,7 @@ public:
     FileInfoRecorder* removeFile(FileInfoRecorder*);
     FileInfoRecorder* getFile(int);
     FileInfoRecorder* getFile(const char* name);
+    FileInfoRecorder* reset(FileInfoRecorder* , const char* dir);
 };
 
 #endif // FILE_H

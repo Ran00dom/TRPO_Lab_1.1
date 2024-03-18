@@ -7,7 +7,7 @@ MyApplication::MyApplication(int argc, char*argv[]):QCoreApplication(argc,argv)
 {
     consolTimer = startTimer(50); // запуск таймера консоли
     log.logList("<< The program was created by Kiryushkin Yaroslav from the group 932122 >>");
-    log.logList("Call list of commands /file help !",WARNING);
+    log.logList("Call list of commands /file help | to enable file update enter /file update",WARNING);
 }
 
 void MyApplication::timerEvent(QTimerEvent* event)
@@ -55,11 +55,12 @@ bool MyApplication::listenCommand(std::string str) // определяет и в
             case COMMAND_DROP:
                 if (countWord > 2 && countWord < 4) {
                     if (manager.getFile(command[2].c_str()) != nullptr) {
-                        manager.removeFile(disconnectFileLog(manager.getFile(command[2].c_str())));
+                        disconnectFileLog(manager.getFile(command[2].c_str()));
+                        manager.removeFile(manager.getFile(command[2].c_str()));
                         log.logList("File drop!", ACCEPT);
                     }
                     else
-                        log.logList("File dont drop!", ERRORS);
+                        log.logList("File dont found!", ERRORS);
                     break;
                 }
                 else{
@@ -103,7 +104,7 @@ bool MyApplication::listenCommand(std::string str) // определяет и в
             case COMMAND_HELP:
                 if (countWord > 1 && countWord < 3) {
                     log.logList("< COMMAND LIST >", MESSAGE);
-                    log.logList("< every command starts with \file :>");
+                    log.logList("< every command starts with /file :>");
                     log.logList("| add [dir]          | adds a file along dir the path in the listening list");
                     log.logList("| drop [file name]   | deleting a file from the wiretap with the name [name]");
                     log.logList("| listen             | starts wiretapping if it is stopped");
@@ -118,10 +119,27 @@ bool MyApplication::listenCommand(std::string str) // определяет и в
                     break;
                 }
 
+            case COMMAND_RESET:
+                if (countWord > 1 && countWord < 5) {
+                    if (manager.getFile(command[2].c_str()) != nullptr){
+                        if (manager.reset(
+                            manager.getFile(command[2].c_str()),
+                            command[3].c_str())
+                            )
+                        log.logList("File reset!", ACCEPT);
+                        break;
+                    }
+                    else {
+                        log.logList("File dont found!", ERRORS);
+                        break;
+                    }
+                    break;
+                }
+                else{
+                    log.logList("Command not difined!", WARNING);
+                    break;
+                }
 
-            case COMMAND_RESET:{
-
-            }
 
             case COMMAND_LIST:
                 if (countWord > 1 && countWord < 3) {
@@ -133,8 +151,6 @@ bool MyApplication::listenCommand(std::string str) // определяет и в
                     log.logList("Command not difined!", WARNING);
                     break;
                 }
-
-
 
             case COMMAND_EXIT:
                 if (countWord > 1 && countWord < 3) {

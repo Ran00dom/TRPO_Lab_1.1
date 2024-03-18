@@ -22,7 +22,6 @@ bool FileInfoRecorder::addNext(FileInfoRecorder* next)
 
 void FileInfoRecorder::updateData(bool forcibly)
 {
-    std::cout << "update" << std::endl;
     file->refresh();
     bool updateExist = file->exists();
     QDateTime lastTimeModified = file->lastModified();
@@ -46,6 +45,17 @@ bool FileInfoRecorder::isFileName(const char* name)
     return false;
 }
 
+bool FileInfoRecorder::reset(const char* dir)
+{
+    if (file != nullptr) {
+        delete file;
+        file = nullptr;
+        file = new QFileInfo(dir);
+    }
+    return false;
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 FileInfoRecorder* FileManager::addFile(const char* dir)
 {
@@ -167,6 +177,15 @@ FileInfoRecorder*  FileManager::getFile(const char* name) // получить э
     for (FileInfoRecorder* ptr = headList ; ptr != nullptr ; ptr = ptr->getNext())
         if (ptr->isFileName(name))
             return ptr;
+    return nullptr;
+}
+
+FileInfoRecorder* FileManager::reset(FileInfoRecorder* file, const char* dir)
+{
+    if (file != nullptr){
+        file->reset(dir);
+        return file;
+    }
     return nullptr;
 }
 
