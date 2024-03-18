@@ -9,12 +9,15 @@
 
 enum Command
 {
-    COMMAND_FILE,
+    COMMAND_FILE = 0,
     COMMAND_HELP,
     COMMAND_ADD,
     COMMAND_DROP,
     COMMAND_LISTEN,
-    COMMAND_MUTE
+    COMMAND_MUTE,
+    COMMAND_RESET,
+    COMMAND_LIST,
+    COMMAND_EXIT,
 };
 
 
@@ -30,7 +33,8 @@ private:
     FileManager manager;
     Loger log;
 
-    const std::string commands[7] =
+    const int numCommand = 10;
+    const std::string commands[10] =
         {
             "/file",
             "help",
@@ -38,6 +42,9 @@ private:
             "drop",
             "listen",
             "mute",
+            "reset",
+            "list",
+            "exit",
             "empty"
         };
 

@@ -6,6 +6,8 @@
 MyApplication::MyApplication(int argc, char*argv[]):QCoreApplication(argc,argv)
 {
     consolTimer = startTimer(50); // запуск таймера консоли
+    log.logList("<< The program was created by Kiryushkin Yaroslav from the group 932122 >>");
+    log.logList("Call list of commands /file help !",WARNING);
 }
 
 void MyApplication::timerEvent(QTimerEvent* event)
@@ -44,7 +46,7 @@ bool MyApplication::listenCommand(std::string str) // определяет и в
                         log.logList("File add!", ACCEPT);
                     break;
                 }
-                else {
+                else{
                     log.logList("Command not difined!", WARNING);
                     break;
                 }
@@ -52,16 +54,18 @@ bool MyApplication::listenCommand(std::string str) // определяет и в
 
             case COMMAND_DROP:
                 if (countWord > 2 && countWord < 4) {
-                    if (manager.getFile(std::stoi(command[2])))
-                    {
-                        manager.removeFile(disconnectFileLog(manager.getFile(std::stoi(command[2]))));
+                    if (manager.getFile(command[2].c_str()) != nullptr) {
+                        manager.removeFile(disconnectFileLog(manager.getFile(command[2].c_str())));
+                        log.logList("File drop!", ACCEPT);
                     }
+                    else
+                        log.logList("File dont drop!", ERRORS);
+                    break;
                 }
-                else
-                {
-                    // not correct parth
+                else{
+                    log.logList("Command not difined!", WARNING);
+                    break;
                 }
-
 
             case COMMAND_LISTEN: // запуск прослушивания
                 if (countWord > 1 && countWord < 3) {
@@ -74,9 +78,10 @@ bool MyApplication::listenCommand(std::string str) // определяет и в
                         log.logList("Already listen!", WARNING);
                     break;
                 }
-                else
+                else{
                     log.logList("Command not difined!", WARNING);
-
+                    break;
+                }
 
             case COMMAND_MUTE: // выключить прослушку
                 if (countWord > 1 && countWord < 3) {
@@ -87,14 +92,52 @@ bool MyApplication::listenCommand(std::string str) // определяет и в
                     }
                     else
                         log.logList("Already mute!", WARNING);
+                    break;
                 }
-                else
+                else{
                     log.logList("Command not difined!", WARNING);
+                    break;
+                }
 
 
-            case COMMAND_HELP:{
-                // help info
+            case COMMAND_HELP:
+                if (countWord > 1 && countWord < 3) {
+                    log.logList("< COMMAND LIST >", MESSAGE);
+                    log.logList("< every command starts with \file :>");
+                    log.logList("| add [dir]          | adds a file along dir the path in the listening list");
+                    log.logList("| drop [file name]   | deleting a file from the wiretap with the name [name]");
+                    log.logList("| listen             | starts wiretapping if it is stopped");
+                    log.logList("| mute               | stop wiretapping if it exists");
+                    log.logList("| reset [name] [dir] | replacing the wiretapped file with the name [name] with a new one from [dir]");
+                    log.logList("| list               | force the states of all files to be displayed");
+                    log.logList("| exit               | exit the application");
+                    break;
+                }
+                else{
+                    log.logList("Command not difined!", WARNING);
+                    break;
+                }
+
+
+            case COMMAND_RESET:{
+
             }
+
+            case COMMAND_LIST:{
+
+            }
+
+            case COMMAND_EXIT:
+                if (countWord > 1 && countWord < 3) {
+                    this->exit();
+                    log.logList("Program completed!", MESSAGE);
+                    log.logList("< press any button >", INFO);
+                    break;
+                }
+                else{
+                    log.logList("Command not difined!", WARNING);
+                    break;
+                }
 
 
             break;
@@ -110,7 +153,7 @@ bool MyApplication::listenCommand(std::string str) // определяет и в
 
 int MyApplication::commandCheck(std::string str) // проверка индекса ключевого слова
 {
-    for (int i = 0; i < 7 ; i++) {
+    for (int i = 0; i < numCommand; i++) {
         if (str == commands[i])
             return i;
     }

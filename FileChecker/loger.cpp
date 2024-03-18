@@ -11,35 +11,41 @@ void Loger::logFileUpdate(QFileInfo* file)
 
 void Loger::logList(string name, TypeMessage type , int sizeX , int sizeY , string* columName, string** table)
 {
-    setColor(type);
-    switch (type) {
-    case ERRORS: {
-        cout << "ERROR: ";
+
+        setColor(type);
+        switch (type) {
+        case ERRORS: {
+            cout << "ERROR: ";
+            break;
+        }
+        case WARNING:{
+            cout << "WARNING: ";
+            break;
+        }
+        case ACCEPT:{
+            cout << "ACCEPT: ";
+            break;
+        }
+        case MESSAGE:{
+            cout << "MESSAGE: ";
+            break;
+        }
+        case INFO: break;
+
         break;
-    }
-    case WARNING:{
-        cout << "WARNING: ";
-        break;
-    }
-    case ACCEPT:{
-        cout << "ACCEPT: ";
-        break;
-    }
-    case MESSAGE:{
-        cout << "MESSAGE: ";
-        break;
-    }
-    case INFO: {break;};
-        break;
-    }
+        }
+
+            setColor();
+
+
 
     if (sizeX == 0 || sizeY == 0){
         cout << name << endl;
     }
     else{
-        cout << "<< " << &name << ">>" << endl;
+        cout << "<< " << name << ">>" << endl;
 
-
+        cout << "index" << endl;
         for (int i = 0; i < sizeX; i++)
         {
             cout << columName[i] << " | ";
@@ -53,7 +59,6 @@ void Loger::logList(string name, TypeMessage type , int sizeX , int sizeY , stri
             cout << endl;
         }
     }
-    setColor();
 }
 
 void Loger::setColor(TypeMessage type)

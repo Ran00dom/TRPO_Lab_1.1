@@ -5,9 +5,6 @@ FileInfoRecorder::FileInfoRecorder(const char* parth, FileInfoRecorder* next):QO
 {
     file = new QFileInfo(parth);
     if (file != nullptr) {
-        std::cout << "File create!" << std::endl;
-        exist = file->exists();
-        timeModified = file->lastModified();
         this->next = next;
         this->size = file->size();
     }
@@ -42,6 +39,13 @@ FileInfoRecorder* FileInfoRecorder::getNext()
     return next;
 }
 
+bool FileInfoRecorder::isFileName(const char* name)
+{
+    if (file->fileName() == name)
+        return true;
+    return false;
+}
+
 
 FileInfoRecorder* FileManager::addFile(const char* dir)
 {
@@ -58,6 +62,36 @@ FileInfoRecorder* FileManager::addFile(const char* dir)
     return tail;
 }
 
+
+FileInfoRecorder* FileManager::removeFile(const char* name)
+{
+    int i = 0;
+    FileInfoRecorder* back = nullptr;
+    count--;
+    for (FileInfoRecorder* ptr = headList ; ptr != nullptr ;  back = ptr, ptr = ptr->getNext(), i++)
+        if (ptr->isFileName(name))
+            if (ptr == headList){
+                ptr = ptr->getNext();
+                delete headList;
+                headList = ptr;
+                return ptr;
+            }
+            else {
+                if (ptr == tail){
+                    tail = back;
+                    back->addNext(nullptr);
+                    delete ptr;
+                    return tail;
+                }
+                else {
+                    ptr = ptr->getNext();
+                    delete back->getNext();
+                    back->addNext(ptr);
+                    return back->getNext();
+                }
+            }
+    return nullptr;
+}
 
 FileInfoRecorder* FileManager::removeFile(int index)
 {
@@ -127,4 +161,13 @@ FileInfoRecorder*  FileManager::getFile(int index) // получить элем�
             return ptr;
     return nullptr;
 }
+
+FileInfoRecorder*  FileManager::getFile(const char* name) // получить элемент списка
+{
+    for (FileInfoRecorder* ptr = headList ; ptr != nullptr ; ptr = ptr->getNext())
+        if (ptr->isFileName(name))
+            return ptr;
+    return nullptr;
+}
+
 
