@@ -123,14 +123,23 @@ bool MyApplication::listenCommand(std::string str) // определяет и в
 
             }
 
-            case COMMAND_LIST:{
+            case COMMAND_LIST:
+                if (countWord > 1 && countWord < 3) {
+                    log.logList("<< FILE LIST >>", MESSAGE);
+                    emit update(true);
+                    break;
+                }
+                else{
+                    log.logList("Command not difined!", WARNING);
+                    break;
+                }
 
-            }
+
 
             case COMMAND_EXIT:
                 if (countWord > 1 && countWord < 3) {
                     this->exit();
-                    log.logList("Program completed!", MESSAGE);
+                    log.logList("Program completed!", WARNING);
                     log.logList("< press any button >", INFO);
                     break;
                 }
