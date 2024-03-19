@@ -6,7 +6,7 @@
 void Loger::logFileUpdate(QFileInfo* file)
 {
     if (file != nullptr) {
-        qDebug() << file->baseName() + file->suffix() << "STATUS / exist? " << file->exists() << " / size?  " << file->size() << " / last Time Modified " << file->lastModified().date().toString() << "" << file->lastModified().time().toString();
+        qDebug() << file->baseName() + "." + file->suffix() << "STATUS / exist? " << file->exists() << " / size?  " << file->size() << " / last Time Modified " << file->lastModified().date().toString() << "" << file->lastModified().time().toString();
     }
 }
 
