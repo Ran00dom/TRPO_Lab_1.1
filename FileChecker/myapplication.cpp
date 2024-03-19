@@ -58,11 +58,18 @@ bool MyApplication::listenCommand(std::string str) // определяет и в
             case COMMAND_DROP:{
                 if (countWord == 3) {
                     QString str(command[2].c_str());
-                    if (manager.removeFile(str))
-                        log.logList("file DROPPED successfully!", ACCEPT);
+                    bool isNumber;
+                    int index = str.toInt(&isNumber);
+                    if (isNumber)
+                        if (manager.removeFile(index))
+                            log.logList("file DROPPED successfully!", ACCEPT);
+                        else
+                            log.logList("file not DROPPED!", ERRORS);
                     else
-                        log.logList("file not DROPPED!", ERRORS);
-
+                        if (manager.removeFile(str))
+                            log.logList("file DROPPED successfully!", ACCEPT);
+                        else
+                            log.logList("file not DROPPED!", ERRORS);
                     break;
                 }
                 log.logList("command not difined!", WARNING);
