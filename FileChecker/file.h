@@ -6,38 +6,23 @@
 #include <QObject>
 #include <QDebug>
 
-class FileInfoRecorder:public QObject
+class FileInfoRecorder:public QFileInfo
 {
     Q_OBJECT // макрос для компиляции слотов и сигналов
 private:
     bool exist = true;
     QDateTime timeModified;
     qint64 size;
-    QFileInfo* file;
-
-    FileInfoRecorder* next;
 
 public:
-    FileInfoRecorder(const char* parth, FileInfoRecorder* next);
-    virtual ~FileInfoRecorder(){delete file;};
-    bool addNext(FileInfoRecorder*);
-    bool isFileName(const char* name);
-    FileInfoRecorder* getNext();
-    bool reset(const char* dir);
-
-signals:
-    void logedStatus(QFileInfo*);
-
-public slots:
-    void updateData(bool forcibly = false);
-
+    FileInfoRecorder(QString dir):QFileInfo(dir){};
+    bool updateData();
 };
 
 class FileManager
 {
 private:
-    FileInfoRecorder* headList= nullptr;
-    FileInfoRecorder* tail = nullptr;
+
     int count{0};
 
 public:

@@ -1,59 +1,21 @@
 #include "file.h"
 #include <iostream>
 
-FileInfoRecorder::FileInfoRecorder(const char* parth, FileInfoRecorder* next):QObject()
-{
-    file = new QFileInfo(parth);
-    if (file != nullptr) {
-        this->next = next;
-        this->size = file->size();
-    }
-}
 
-bool FileInfoRecorder::addNext(FileInfoRecorder* next)
+bool FileInfoRecorder::updateData()
 {
-    this->next = next;
-    if (next != nullptr) {
-        return true;
-    }
-    else
-        return false;
-}
+    refresh();
+    bool updateExist = exists();
+    QDateTime lastTimeModified = lastModified();
 
-void FileInfoRecorder::updateData(bool forcibly)
-{
-    file->refresh();
-    bool updateExist = file->exists();
-    QDateTime lastTimeModified = file->lastModified();
-
-    if (updateExist != exist || lastTimeModified != timeModified || forcibly) {
+    if (updateExist != exist || lastTimeModified != timeModified) {
         exist = updateExist;
         timeModified = lastTimeModified;
-        emit logedStatus(this->file);
-    }
-}
-
-FileInfoRecorder* FileInfoRecorder::getNext()
-{
-    return next;
-}
-
-bool FileInfoRecorder::isFileName(const char* name)
-{
-    if (file->fileName() == name)
         return true;
-    return false;
-}
-
-bool FileInfoRecorder::reset(const char* dir)
-{
-    if (file != nullptr) {
-        delete file;
-        file = nullptr;
-        file = new QFileInfo(dir);
     }
     return false;
 }
+
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
