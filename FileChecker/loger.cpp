@@ -1,11 +1,12 @@
 #include "loger.h"
+#include <QDateTime>
 #include <QDebug>
 
 
 void Loger::logFileUpdate(QFileInfo* file)
 {
     if (file != nullptr) {
-            qDebug() << file->baseName() << "STATUS / exist? " << file->exists() << " / size?  " << file->size();
+        qDebug() << file->baseName() << "STATUS / exist? " << file->exists() << " / size?  " << file->size() << " / last Time Modified " << file->lastModified().date().toString() << "" << file->lastModified().time().toString();
     }
 }
 
