@@ -37,15 +37,15 @@ int  FileManager::getFile(QString name) const  // получить элемен�
 
 bool FileManager::addFile(QString dir)
 {
-    int length = files.length();
-    FileInfoRecorder* file = new FileInfoRecorder(dir);
-    files.append(*file);
-    if (length != files.length())
-        return true;
-    else {
-        delete file;
-        return false;
+    QFileInfo check(dir);
+    if (getFile(check.fileName()) == -1){ // проверка на существование такого файла
+        int length = files.length();
+        FileInfoRecorder file(dir);
+        files.append(file);
+        if (length != files.length())
+            return true;
     }
+    return false;
 }
 
 bool FileManager::removeFile(QString name)

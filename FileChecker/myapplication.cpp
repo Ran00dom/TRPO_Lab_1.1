@@ -183,7 +183,6 @@ std::string* MyApplication::spliter(std::string str, int* countWord = nullptr) /
         int num = std::count(str.begin(),str.end(), ' ')+1;
 
         std::string *newStr = new std::string[num];
-        std::cout<< num << std::endl;
         int j = -1;
         bool begin = false;
 
