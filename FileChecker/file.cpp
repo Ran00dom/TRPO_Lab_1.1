@@ -189,4 +189,14 @@ FileInfoRecorder* FileManager::reset(FileInfoRecorder* file, const char* dir)
     return nullptr;
 }
 
-
+FileManager::~FileManager()
+{
+    FileInfoRecorder* back = nullptr;
+    for (FileInfoRecorder* ptr = headList ; ptr != nullptr ;  back = ptr, ptr = ptr->getNext()){
+        if (back != nullptr){
+            delete back;
+        }
+    }
+    if (back != nullptr)
+        delete back;
+}

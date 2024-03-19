@@ -42,6 +42,7 @@ private:
 
 public:
     FileManager(){};
+    ~FileManager();
     FileInfoRecorder* addFile(const char* dir);
     FileInfoRecorder* removeFile(const char* name);
     FileInfoRecorder* removeFile(int index);
