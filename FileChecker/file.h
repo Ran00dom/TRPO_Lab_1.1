@@ -37,6 +37,11 @@ public:
     bool removeFile(QString name);
     bool removeFile(int index);
     bool reset(QString nameResetFile, QString dirNewFile);
+
+signals:
+    void logUpdate(bool exist, qint64 size, QString date);
+public slots:
+    void update(bool);
 };
 
 #endif // FILE_H

@@ -52,17 +52,11 @@ public:
     MyApplication(int argc, char*argv[]);
 
 private:
-    bool listen();
-    FileInfoRecorder* connectFileLog(FileInfoRecorder*);
-    FileInfoRecorder* disconnectFileLog(FileInfoRecorder*);
-
     bool listenCommand(std::string);
-     int commandCheck(std::string);
-
+    int commandCheck(std::string);
     std::string* spliter(std::string, int*);
-
-
     void timerEvent(QTimerEvent*); // переопределение для таймера
+
 signals:
     void update(bool forcibly = false);
 };

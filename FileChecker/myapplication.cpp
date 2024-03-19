@@ -184,20 +184,16 @@ std::string* MyApplication::spliter(std::string str, int* countWord = nullptr) /
         bool begin = false;
 
         std::string bufer = "";
-        for (size_t i = 0 ; i < str.length(); i++)
-        {
-            if (str[i] != ' ')
-            {
-                if (!begin)
-                {
+        for (size_t i = 0 ; i < str.length(); i++){
+            if (str[i] != ' '){
+                if (!begin){
                     j++;
                     begin = true;
                 }
                 bufer.append(1,str[i]);
             }
             else
-                if (begin)
-                {
+                if (begin){
                     newStr[j] = bufer;
                     bufer.clear();
                     begin = false;
@@ -214,24 +210,6 @@ std::string* MyApplication::spliter(std::string str, int* countWord = nullptr) /
     return nullptr;
 }
 
-FileInfoRecorder* MyApplication::connectFileLog(FileInfoRecorder* file)
-{
-    if (file != nullptr) {
-        log.logList("connect", ACCEPT);
-        this->connect(this, &MyApplication::update, file, &FileInfoRecorder::updateData);
-        this->connect(file, &FileInfoRecorder::logedStatus, &log, &Loger::logFileUpdate);
-    }
-    return file;
-}
 
-FileInfoRecorder* MyApplication::disconnectFileLog(FileInfoRecorder* file)
-{
-    if (file != nullptr) {
-        log.logList("disconnect", ACCEPT);
-        this->disconnect(this, &MyApplication::update, file, &FileInfoRecorder::updateData);
-        this->disconnect(file, &FileInfoRecorder::logedStatus, &log, &Loger::logFileUpdate);
-    }
-    return file;
-}
 
 
