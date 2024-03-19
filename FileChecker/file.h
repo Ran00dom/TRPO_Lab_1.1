@@ -4,11 +4,10 @@
 #include <QFileInfo>
 #include <QDateTime>
 #include <QObject>
-#include <QDebug>
 
 class FileInfoRecorder:public QFileInfo
 {
-    Q_OBJECT // макрос для компиляции слотов и сигналов
+
 private:
     bool exist = true;
     QDateTime timeModified;
@@ -19,22 +18,24 @@ public:
     bool updateData();
 };
 
-class FileManager
+class FileManager:public QObject
 {
+       Q_OBJECT
 private:
 
     int count{0};
 
+private:
+    int getFile(QString name);
+
 public:
     FileManager(){};
     ~FileManager();
-    FileInfoRecorder* addFile(const char* dir);
-    FileInfoRecorder* removeFile(const char* name);
-    FileInfoRecorder* removeFile(int index);
-    FileInfoRecorder* removeFile(FileInfoRecorder*);
-    FileInfoRecorder* getFile(int);
-    FileInfoRecorder* getFile(const char* name);
-    FileInfoRecorder* reset(FileInfoRecorder* , const char* dir);
+
+    bool addFile(QString dir);
+    bool removeFile(QString dir);
+    bool removeFile(int index);
+    bool reset(QString nameResetFile, QString dirNewFile);
 };
 
 #endif // FILE_H
