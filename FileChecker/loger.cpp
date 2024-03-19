@@ -5,9 +5,7 @@
 
 void Loger::logFileUpdate(QString name, bool exist, qint64 size, QString date)
 {
-
     qDebug() << name << "STATUS / exist? " << exist << " / size?  " << size << " / last Time Modified " << date;
-
 }
 
 void Loger::logList(string name, TypeMessage type , int sizeX , int sizeY , string* columName, string** table)

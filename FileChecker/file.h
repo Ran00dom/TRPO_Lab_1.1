@@ -6,7 +6,6 @@
 #include <QObject>
 #include <QVector>
 
-
 class FileInfoRecorder:public QFileInfo
 {
 

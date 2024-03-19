@@ -6,6 +6,8 @@
 
 MyApplication::MyApplication(int argc, char*argv[]):QCoreApplication(argc,argv)
 {
+    connect(this, &MyApplication::update, &manager, &FileManager::update);
+    connect(&manager, &FileManager::logUpdate, &log, &Loger::logFileUpdate);
     consolTimer = startTimer(50); // запуск таймера консоли
     log.logList("<< The program was created by Kiryushkin Yaroslav from the group 932122 >>");
     log.logList("Call list of commands /file help | to enable file update enter /file update",WARNING);
