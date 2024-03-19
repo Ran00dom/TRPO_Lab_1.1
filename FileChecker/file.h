@@ -4,6 +4,7 @@
 #include <QFileInfo>
 #include <QDateTime>
 #include <QObject>
+#include <QVector>
 
 class FileInfoRecorder:public QFileInfo
 {
@@ -26,14 +27,14 @@ private:
     int count{0};
 
 private:
+    QVector<FileInfoRecorder> files;
     int getFile(QString name);
 
 public:
-    FileManager(){};
-    ~FileManager();
+    FileManager():QObject(){files.clear();};
 
     bool addFile(QString dir);
-    bool removeFile(QString dir);
+    bool removeFile(QString name);
     bool removeFile(int index);
     bool reset(QString nameResetFile, QString dirNewFile);
 };
