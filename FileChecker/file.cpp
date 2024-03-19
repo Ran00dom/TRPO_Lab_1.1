@@ -1,202 +1,86 @@
 #include "file.h"
-#include <iostream>
 
-FileInfoRecorder::FileInfoRecorder(const char* parth, FileInfoRecorder* next):QObject()
+bool FileInfoRecorder::updateData()
 {
-    file = new QFileInfo(parth);
-    if (file != nullptr) {
-        this->next = next;
-        this->size = file->size();
-    }
-}
+    refresh();
+    bool updateExist = exists();
+    QDateTime lastTimeModified = lastModified();
 
-bool FileInfoRecorder::addNext(FileInfoRecorder* next)
-{
-    this->next = next;
-    if (next != nullptr) {
-        return true;
-    }
-    else
-        return false;
-}
-
-void FileInfoRecorder::updateData(bool forcibly)
-{
-    file->refresh();
-    bool updateExist = file->exists();
-    QDateTime lastTimeModified = file->lastModified();
-
-    if (updateExist != exist || lastTimeModified != timeModified || forcibly) {
+    if (updateExist != exist || lastTimeModified != timeModified) {
         exist = updateExist;
         timeModified = lastTimeModified;
-        emit logedStatus(this->file);
-    }
-}
-
-FileInfoRecorder* FileInfoRecorder::getNext()
-{
-    return next;
-}
-
-bool FileInfoRecorder::isFileName(const char* name)
-{
-    if (file->fileName() == name)
+        sizeFile = this->size();
         return true;
-    return false;
-}
-
-bool FileInfoRecorder::reset(const char* dir)
-{
-    if (file != nullptr) {
-        delete file;
-        file = nullptr;
-        file = new QFileInfo(dir);
     }
     return false;
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-FileInfoRecorder* FileManager::addFile(const char* dir)
+int  FileManager::getFile(QString name) const  // получить элемент списка
 {
-    if (headList == nullptr) {
-        headList = new FileInfoRecorder(dir, nullptr);
-        tail = headList;
-        count++;
+    for (int var = 0; var < files.length(); var++) {
+        if (files.at(var).fileName() == name || files.at(var).fileName() + "." + files.at(var).suffix() == name)
+            return var;
     }
+    return -1;
+}
+
+bool FileManager::addFile(QString dir)
+{
+    int length = files.length();
+    FileInfoRecorder* file = new FileInfoRecorder(dir);
+    files.append(*file);
+    if (length != files.length())
+        return true;
     else {
-        FileInfoRecorder* element = new FileInfoRecorder(dir, nullptr);
-        tail->addNext(element);
-        tail = element;
+        delete file;
+        return false;
     }
-    return tail;
 }
 
-
-FileInfoRecorder* FileManager::removeFile(const char* name)
+bool FileManager::removeFile(QString name)
 {
-    int i = 0;
-    FileInfoRecorder* back = nullptr;
-    count--;
-    for (FileInfoRecorder* ptr = headList ; ptr != nullptr ;  back = ptr, ptr = ptr->getNext(), i++)
-        if (ptr->isFileName(name))
-            if (ptr == headList){
-                ptr = ptr->getNext();
-                delete headList;
-                headList = ptr;
-                return ptr;
-            }
-            else {
-                if (ptr == tail){
-                    tail = back;
-                    back->addNext(nullptr);
-                    delete ptr;
-                    return tail;
-                }
-                else {
-                    ptr = ptr->getNext();
-                    delete back->getNext();
-                    back->addNext(ptr);
-                    return back->getNext();
-                }
-            }
-    return nullptr;
-}
+    if (!files.empty()){
+        int state = getFile(name);
+        if (state > -1) {
+            int length = files.length();
+            files.remove(state);
 
-FileInfoRecorder* FileManager::removeFile(int index)
-{
-    int i = 0;
-    FileInfoRecorder* back = nullptr;
-    count--;
-    for (FileInfoRecorder* ptr = headList ; ptr != nullptr ;  back = ptr, ptr = ptr->getNext(), i++)
-        if (i == index)
-            if (ptr == headList){
-                ptr = ptr->getNext();
-                delete headList;
-                headList = ptr;
-                return ptr;
-            }
-            else {
-                if (ptr == tail){
-                    tail = back;
-                    back->addNext(nullptr);
-                    delete ptr;
-                    return tail;
-                }
-                else {
-                    ptr = ptr->getNext();
-                    delete back->getNext();
-                    back->addNext(ptr);
-                    return back->getNext();
-                }
-            }
-    return nullptr;
-}
-
-FileInfoRecorder* FileManager::removeFile(FileInfoRecorder* file)
-{
-    FileInfoRecorder* back = nullptr;
-    count--;
-    for (FileInfoRecorder* ptr = headList ; ptr != nullptr ;  back = ptr, ptr = ptr->getNext())
-        if (file == ptr)
-            if (ptr == headList){
-                ptr = ptr->getNext();
-                delete headList;
-                headList = ptr;
-                return ptr;
-            }
-            else {
-                if (ptr == tail){
-                    tail = back;
-                    back->addNext(nullptr);
-                    delete ptr;
-                    return tail;
-                }
-                else {
-                    ptr = ptr->getNext();
-                    delete back->getNext();
-                    back->addNext(ptr);
-                    return back->getNext();
-                }
-            }
-    return nullptr;
-}
-
-
-FileInfoRecorder*  FileManager::getFile(int index) // получить элемент списка
-{
-     int i = 0;
-    for (FileInfoRecorder* ptr = headList ; ptr != nullptr ; ptr = ptr->getNext(), i++)
-        if (index == i)
-            return ptr;
-    return nullptr;
-}
-
-FileInfoRecorder*  FileManager::getFile(const char* name) // получить элемент списка
-{
-    for (FileInfoRecorder* ptr = headList ; ptr != nullptr ; ptr = ptr->getNext())
-        if (ptr->isFileName(name))
-            return ptr;
-    return nullptr;
-}
-
-FileInfoRecorder* FileManager::reset(FileInfoRecorder* file, const char* dir)
-{
-    if (file != nullptr){
-        file->reset(dir);
-        return file;
-    }
-    return nullptr;
-}
-
-FileManager::~FileManager()
-{
-    FileInfoRecorder* back = nullptr;
-    for (FileInfoRecorder* ptr = headList ; ptr != nullptr ;  back = ptr, ptr = ptr->getNext()){
-        if (back != nullptr){
-            delete back;
+            if (length != files.length())
+                return true;
         }
     }
-    if (back != nullptr)
-        delete back;
+    return false;
+}
+
+bool FileManager::removeFile(int index)
+{
+    if (!files.empty())
+        if (index > -1 && index < files.length()){
+            int length = files.length();
+            files.remove(index);
+
+            if (length != files.length())
+                return true;
+        }
+    return false;
+}
+
+bool FileManager::reset(QString nameResetFile, QString dirNewFile)
+{
+    if (removeFile(nameResetFile))
+        if (addFile(dirNewFile))
+            return true;
+    return false;
+}
+
+void FileManager::update(bool forcibly = false)
+{
+    for (int var = 0; var < files.length(); var++) {
+        if (files[var].updateData() || forcibly){
+            const FileInfoRecorder& file = files.at(var);
+            emit logUpdate(file.fileName(), file.exists(), file.size(), file.lastModified().date().toString() + ":" + file.lastModified().time().toString());
+        }
+    }
 }

@@ -4,52 +4,43 @@
 #include <QFileInfo>
 #include <QDateTime>
 #include <QObject>
-#include <QDebug>
+#include <QVector>
 
-class FileInfoRecorder:public QObject
+class FileInfoRecorder:public QFileInfo
 {
-    Q_OBJECT // макрос для компиляции слотов и сигналов
+
 private:
     bool exist = true;
     QDateTime timeModified;
-    qint64 size;
-    QFileInfo* file;
-
-    FileInfoRecorder* next;
+    qint64 sizeFile;
 
 public:
-    FileInfoRecorder(const char* parth, FileInfoRecorder* next);
-    virtual ~FileInfoRecorder(){delete file;};
-    bool addNext(FileInfoRecorder*);
-    bool isFileName(const char* name);
-    FileInfoRecorder* getNext();
-    bool reset(const char* dir);
-
-signals:
-    void logedStatus(QFileInfo*);
-
-public slots:
-    void updateData(bool forcibly = false);
-
+    FileInfoRecorder(QString dir):QFileInfo(dir){};
+    bool updateData();
 };
 
-class FileManager
+class FileManager:public QObject
 {
+       Q_OBJECT
+
 private:
-    FileInfoRecorder* headList= nullptr;
-    FileInfoRecorder* tail = nullptr;
-    int count{0};
+    QVector<FileInfoRecorder> files;
+
+private:
+    int getFile(QString name) const;
 
 public:
-    FileManager(){};
-    ~FileManager();
-    FileInfoRecorder* addFile(const char* dir);
-    FileInfoRecorder* removeFile(const char* name);
-    FileInfoRecorder* removeFile(int index);
-    FileInfoRecorder* removeFile(FileInfoRecorder*);
-    FileInfoRecorder* getFile(int);
-    FileInfoRecorder* getFile(const char* name);
-    FileInfoRecorder* reset(FileInfoRecorder* , const char* dir);
+    FileManager():QObject(){files.clear();};
+
+    bool addFile(QString dir);
+    bool removeFile(QString name);
+    bool removeFile(int index);
+    bool reset(QString nameResetFile, QString dirNewFile);
+
+signals:
+    void logUpdate(QString name, bool exist, qint64 size, QString date);
+public slots:
+    void update(bool);
 };
 
 #endif // FILE_H

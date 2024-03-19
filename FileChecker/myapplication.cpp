@@ -2,9 +2,12 @@
 #include <QDebug>
 #include <cstring>
 #include <conio.h>
+#include <QString>
 
 MyApplication::MyApplication(int argc, char*argv[]):QCoreApplication(argc,argv)
 {
+    connect(this, &MyApplication::update, &manager, &FileManager::update);
+    connect(&manager, &FileManager::logUpdate, &log, &Loger::logFileUpdate);
     consolTimer = startTimer(50); // запуск таймера консоли
     log.logList("<< The program was created by Kiryushkin Yaroslav from the group 932122 >>");
     log.logList("Call list of commands /file help | to enable file update enter /file update",WARNING);
@@ -38,37 +41,50 @@ bool MyApplication::listenCommand(std::string str) // определяет и в
             switch (commandCheck(command[1])) {  // поиск параметра по индексу
 
 
-            case COMMAND_ADD:
+            case COMMAND_ADD: {
                 if (countWord > 2 && countWord < 4) {
-                    if (connectFileLog(manager.addFile(command[2].c_str())) == nullptr)
-                        log.logList("File dont add!", ERRORS);
+                    QString str(command[2].c_str());
+                    if (manager.addFile(str))
+                        log.logList("file CREATE successfully!", ACCEPT);
                     else
-                        log.logList("File add!", ACCEPT);
+                        log.logList("file not CREATED!", ERRORS);
+
                     break;
                 }
-                else{
-                    log.logList("Command not difined!", WARNING);
-                    break;
-                }
+                log.logList("command not difined!", WARNING);
+                break;
+            }
 
 
-            case COMMAND_DROP:
+            case COMMAND_DROP:{
                 if (countWord > 2 && countWord < 4) {
-                    if (manager.getFile(command[2].c_str()) != nullptr) {
-                        disconnectFileLog(manager.getFile(command[2].c_str()));
-                        manager.removeFile(manager.getFile(command[2].c_str()));
-                        log.logList("File drop!", ACCEPT);
-                    }
+                    QString str(command[2].c_str());
+                    if (manager.removeFile(str))
+                        log.logList("file DROPPED successfully!", ACCEPT);
                     else
-                        log.logList("File dont found!", ERRORS);
-                    break;
-                }
-                else{
-                    log.logList("Command not difined!", WARNING);
-                    break;
-                }
+                        log.logList("file not DROPPED!", ERRORS);
 
-            case COMMAND_LISTEN: // запуск прослушивания
+                    break;
+                }
+                log.logList("command not difined!", WARNING);
+                break;
+            }
+
+            case COMMAND_RESET:{
+                if (countWord > 2 && countWord < 4) {
+                    QString name(command[2].c_str()), dir(command[3].c_str());
+                    if (manager.reset(name,dir))
+                        log.logList("file RESET successfully!", ACCEPT);
+                    else
+                        log.logList("file not RESET!", ERRORS);
+
+                    break;
+                }
+                log.logList("command not difined!", WARNING);
+                break;
+            }
+
+            case COMMAND_LISTEN:{ // запуск прослушивания
                 if (countWord > 1 && countWord < 3) {
                     if (!listenFile) {
                         listenFile = true;
@@ -77,14 +93,14 @@ bool MyApplication::listenCommand(std::string str) // определяет и в
                     }
                     else
                         log.logList("Already listen!", WARNING);
-                    break;
-                }
-                else{
-                    log.logList("Command not difined!", WARNING);
-                    break;
-                }
 
-            case COMMAND_MUTE: // выключить прослушку
+                    break;
+                }
+                log.logList("command not difined!", WARNING);
+                break;
+            }
+
+            case COMMAND_MUTE:{ // выключить прослушку
                 if (countWord > 1 && countWord < 3) {
                     if (listenFile) {
                         listenFile = false;
@@ -95,13 +111,12 @@ bool MyApplication::listenCommand(std::string str) // определяет и в
                         log.logList("Already mute!", WARNING);
                     break;
                 }
-                else{
-                    log.logList("Command not difined!", WARNING);
-                    break;
-                }
+                log.logList("command not difined!", WARNING);
+                break;
+            }
 
 
-            case COMMAND_HELP:
+            case COMMAND_HELP:{
                 if (countWord > 1 && countWord < 3) {
                     log.logList("< COMMAND LIST >", MESSAGE);
                     log.logList("< every command starts with /file :>");
@@ -113,68 +128,45 @@ bool MyApplication::listenCommand(std::string str) // определяет и в
                     log.logList("| list               | force the states of all files to be displayed");
                     log.logList("| exit               | exit the application");
                     break;
-                }
-                else{
-                    log.logList("Command not difined!", WARNING);
-                    break;
-                }
-
-            case COMMAND_RESET:
-                if (countWord > 1 && countWord < 5) {
-                    if (manager.getFile(command[2].c_str()) != nullptr){
-                        if (manager.reset(
-                            manager.getFile(command[2].c_str()),
-                            command[3].c_str())
-                            )
-                        log.logList("File reset!", ACCEPT);
-                        break;
-                    }
-                    else {
-                        log.logList("File dont found!", ERRORS);
-                        break;
-                    }
-                    break;
-                }
-                else{
-                    log.logList("Command not difined!", WARNING);
-                    break;
-                }
+                } 
+                log.logList("command not difined!", WARNING);
+                break;
+            }
 
 
-            case COMMAND_LIST:
+            case COMMAND_LIST:{
                 if (countWord > 1 && countWord < 3) {
                     log.logList("<< FILE LIST >>", MESSAGE);
                     emit update(true);
                     break;
                 }
-                else{
-                    log.logList("Command not difined!", WARNING);
-                    break;
-                }
+                log.logList("command not difined!", WARNING);
+                break;
+            }
 
-            case COMMAND_EXIT:
+            case COMMAND_EXIT:{
                 if (countWord > 1 && countWord < 3) {
                     this->exit();
                     log.logList("Program completed!", WARNING);
                     log.logList("< press any button >", INFO);
                     break;
                 }
-                else{
-                    log.logList("Command not difined!", WARNING);
-                    break;
-                }
+                log.logList("command not difined!", WARNING);
+                break;
+            }
 
 
             break;
             default: // исключение
-                log.logList("Command not difined!", WARNING);
+                log.logList("command not difined!", WARNING);
                 return false;
-
             }
         return false;
     }
     return true;
 }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
 
 int MyApplication::commandCheck(std::string str) // проверка индекса ключевого слова
 {
@@ -196,20 +188,16 @@ std::string* MyApplication::spliter(std::string str, int* countWord = nullptr) /
         bool begin = false;
 
         std::string bufer = "";
-        for (size_t i = 0 ; i < str.length(); i++)
-        {
-            if (str[i] != ' ')
-            {
-                if (!begin)
-                {
+        for (size_t i = 0 ; i < str.length(); i++){
+            if (str[i] != ' '){
+                if (!begin){
                     j++;
                     begin = true;
                 }
                 bufer.append(1,str[i]);
             }
             else
-                if (begin)
-                {
+                if (begin){
                     newStr[j] = bufer;
                     bufer.clear();
                     begin = false;
@@ -226,24 +214,6 @@ std::string* MyApplication::spliter(std::string str, int* countWord = nullptr) /
     return nullptr;
 }
 
-FileInfoRecorder* MyApplication::connectFileLog(FileInfoRecorder* file)
-{
-    if (file != nullptr) {
-        log.logList("connect", ACCEPT);
-        this->connect(this, &MyApplication::update, file, &FileInfoRecorder::updateData);
-        this->connect(file, &FileInfoRecorder::logedStatus, &log, &Loger::logFileUpdate);
-    }
-    return file;
-}
 
-FileInfoRecorder* MyApplication::disconnectFileLog(FileInfoRecorder* file)
-{
-    if (file != nullptr) {
-        log.logList("disconnect", ACCEPT);
-        this->disconnect(this, &MyApplication::update, file, &FileInfoRecorder::updateData);
-        this->disconnect(file, &FileInfoRecorder::logedStatus, &log, &Loger::logFileUpdate);
-    }
-    return file;
-}
 
 
