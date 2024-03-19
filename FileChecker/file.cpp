@@ -77,7 +77,3 @@ bool FileManager::reset(QString nameResetFile, QString dirNewFile)
     return false;
 }
 
-FileManager::~FileManager()
-{
-
-}
