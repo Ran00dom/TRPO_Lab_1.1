@@ -17,6 +17,13 @@ bool FileInfoRecorder::updateData()
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+
+FileManager& FileManager::Instance()
+{
+    static FileManager singleInstance;
+    return singleInstance;
+}
+
 int  FileManager::getFile(QString name) const  // получить элемент списка
 {
     for (int var = 0; var < files.length(); var++) {
@@ -25,6 +32,8 @@ int  FileManager::getFile(QString name) const  // получить элемен�
     }
     return -1;
 }
+
+//---------------------------------------------------------------------------------//
 
 bool FileManager::addFile(QString dir)
 {

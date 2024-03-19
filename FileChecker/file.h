@@ -27,10 +27,12 @@ private:
     QVector<FileInfoRecorder> files;
 
 private:
-    int getFile(QString name) const;
-
-public:
     FileManager():QObject(){files.clear();};
+    FileManager(const FileManager&) = delete;
+    FileManager& operator=(const FileManager&) = delete;
+    int getFile(QString name) const;
+public:
+    static FileManager& Instance(); // возвращает адресс единственного экземпляра
 
     bool addFile(QString dir);
     bool removeFile(QString name);

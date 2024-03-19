@@ -1,5 +1,13 @@
 #include "loger.h"
 
+Loger& Loger::Instance()
+{
+    static Loger singleInstance;
+    return singleInstance;
+}
+
+//---------------------------------------------------------------------------------------------------------------//
+
 void Loger::logFileUpdate(QString name, bool exist, qint64 size, QString date)
 {
     qDebug() << name << "STATUS / exist? " << exist << " / size?  " << size << " / last Time Modified " << date;

@@ -30,8 +30,8 @@ private:
     int listenTimer;
     bool listenFile = false;
 
-    FileManager manager;
-    Loger log;
+    FileManager& manager = FileManager::Instance();
+    Loger& log = Loger::Instance();
 
     const int numCommand = 10;
     const std::string commands[10] =
