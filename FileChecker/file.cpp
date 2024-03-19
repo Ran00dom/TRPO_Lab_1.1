@@ -89,7 +89,11 @@ void FileManager::update(bool forcibly = false)
     for (int var = 0; var < files.length(); var++) {
         if (files[var].updateData() || forcibly){
             const FileInfoRecorder& file = files.at(var);
-            emit logUpdate(file.fileName(), file.exists(), file.size(), file.lastModified().date().toString() + ":" + file.lastModified().time().toString());
+            emit logUpdate(file.fileName(),
+                           file.exists(),
+                           file.size(),
+                           file.lastModified().date().toString().isEmpty() ? "NON" : file.lastModified().date().toString() + ":" + file.lastModified().time().toString()
+                           );
         }
     }
 }
