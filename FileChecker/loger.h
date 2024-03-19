@@ -26,11 +26,10 @@ private:
 
 public:
     Loger():QObject(){};
-    virtual ~Loger(){};
     void logList(string name,  TypeMessage type = INFO ,int sizeX = 0, int sizeY = 0, string* columName = nullptr, string** table = nullptr);
 
 public slots:
-    void logFileUpdate(QFileInfo*);
+    void logFileUpdate(QString name, bool exist, qint64 size, QString date);
 };
 
 #endif // LOGER_H

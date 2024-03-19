@@ -39,7 +39,7 @@ public:
     bool reset(QString nameResetFile, QString dirNewFile);
 
 signals:
-    void logUpdate(bool exist, qint64 size, QString date);
+    void logUpdate(QString name, bool exist, qint64 size, QString date);
 public slots:
     void update(bool);
 };
