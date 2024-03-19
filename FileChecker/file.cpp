@@ -1,6 +1,4 @@
 #include "file.h"
-#include <iostream>
-
 
 bool FileInfoRecorder::updateData()
 {

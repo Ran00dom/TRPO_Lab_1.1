@@ -1,11 +1,14 @@
 #include "loger.h"
-#include <QDateTime>
-#include <QDebug>
-
 
 void Loger::logFileUpdate(QString name, bool exist, qint64 size, QString date)
 {
     qDebug() << name << "STATUS / exist? " << exist << " / size?  " << size << " / last Time Modified " << date;
+}
+
+void Loger::setColor(TypeMessage type)
+{
+    HANDLE consol = GetStdHandle(STD_OUTPUT_HANDLE);
+    SetConsoleTextAttribute(consol, type);
 }
 
 void Loger::logList(string name, TypeMessage type , int sizeX , int sizeY , string* columName, string** table)
@@ -55,10 +58,4 @@ void Loger::logList(string name, TypeMessage type , int sizeX , int sizeY , stri
             cout << endl;
         }
     }
-}
-
-void Loger::setColor(TypeMessage type)
-{
-    HANDLE consol = GetStdHandle(STD_OUTPUT_HANDLE);
-    SetConsoleTextAttribute(consol, type);
 }

@@ -22,12 +22,11 @@ public:
 class FileManager:public QObject
 {
        Q_OBJECT
-private:
-
-    int count{0};
 
 private:
     QVector<FileInfoRecorder> files;
+
+private:
     int getFile(QString name) const;
 
 public:

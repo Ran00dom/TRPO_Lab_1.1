@@ -4,6 +4,7 @@
 #include <QFileInfo>
 #include <iostream>
 #include <Windows.h>
+#include <QDebug>
 
 using namespace std;
 

@@ -51,7 +51,7 @@ bool MyApplication::listenCommand(std::string str) // определяет и в
 
                     break;
                 }
-                log.logList("сommand not difined!", WARNING);
+                log.logList("command not difined!", WARNING);
                 break;
             }
 
@@ -66,7 +66,7 @@ bool MyApplication::listenCommand(std::string str) // определяет и в
 
                     break;
                 }
-                log.logList("сommand not difined!", WARNING);
+                log.logList("command not difined!", WARNING);
                 break;
             }
 
@@ -80,7 +80,7 @@ bool MyApplication::listenCommand(std::string str) // определяет и в
 
                     break;
                 }
-                log.logList("сommand not difined!", WARNING);
+                log.logList("command not difined!", WARNING);
                 break;
             }
 
@@ -96,7 +96,7 @@ bool MyApplication::listenCommand(std::string str) // определяет и в
 
                     break;
                 }
-                log.logList("Command not difined!", WARNING);
+                log.logList("command not difined!", WARNING);
                 break;
             }
 
@@ -111,7 +111,7 @@ bool MyApplication::listenCommand(std::string str) // определяет и в
                         log.logList("Already mute!", WARNING);
                     break;
                 }
-                log.logList("Command not difined!", WARNING);
+                log.logList("command not difined!", WARNING);
                 break;
             }
 
@@ -129,7 +129,7 @@ bool MyApplication::listenCommand(std::string str) // определяет и в
                     log.logList("| exit               | exit the application");
                     break;
                 } 
-                log.logList("Command not difined!", WARNING);
+                log.logList("command not difined!", WARNING);
                 break;
             }
 
@@ -140,7 +140,7 @@ bool MyApplication::listenCommand(std::string str) // определяет и в
                     emit update(true);
                     break;
                 }
-                log.logList("Command not difined!", WARNING);
+                log.logList("command not difined!", WARNING);
                 break;
             }
 
@@ -151,20 +151,22 @@ bool MyApplication::listenCommand(std::string str) // определяет и в
                     log.logList("< press any button >", INFO);
                     break;
                 }
-                log.logList("Command not difined!", WARNING);
+                log.logList("command not difined!", WARNING);
                 break;
             }
 
 
             break;
             default: // исключение
-                log.logList("Command not difined!", WARNING);
+                log.logList("command not difined!", WARNING);
                 return false;
             }
         return false;
     }
     return true;
 }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
 
 int MyApplication::commandCheck(std::string str) // проверка индекса ключевого слова
 {
