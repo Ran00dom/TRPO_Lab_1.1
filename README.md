@@ -13,11 +13,11 @@
 3. Если файл не существует - выводится: exist false
 
 ## Архитектура
-1. MyApplication : QApplication осуществляет прослушку консольных команд, обновление статуса FileInfoRecorder, контроль сигнально-слотового соединения между FileInfoRecorder и Loger
-2. FileManager контролирует список FileInfoRecorder
-3. FileInfoRecorder : QFileInfo запоминает, обновляет характеристики файла и отправляет сигнал об изменениях
-4. Loger выводит уведомления в консоль об изменениях файла.
+1. MyApplication : QApplication осуществляет прослушку консольных команд, обновление статуса FileManager, контроль сигнально-слотового соединения между FileManager и Loger
+2. <Singleton> FileManager контролирует список FileInfoRecorder, обрабатывает обновления FileInfoRecorder
+3. FileInfoRecorder : QFileInfo запоминает, обновляет характеристики файла и отправляет сигнал об изменениях в FileManager
+4. <Singleton> Loger выводит уведомления в консоль об изменениях файла.
 
 ## UML-диаграмма
-![Иллюстрация к проекту](https://github.com/Ran00dom/TRPO_Lab_1.1/raw//task_description/UML-класс_2.png)
+![Иллюстрация к проекту](https://github.com/Ran00dom/TRPO_Lab_1.1/raw//task_description/UML-класс_5.png)
 

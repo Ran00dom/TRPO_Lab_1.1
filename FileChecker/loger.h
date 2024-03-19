@@ -4,6 +4,7 @@
 #include <QFileInfo>
 #include <iostream>
 #include <Windows.h>
+#include <QDebug>
 
 using namespace std;
 
@@ -22,15 +23,19 @@ class Loger:public QObject
     Q_OBJECT
 
 private:
+    Loger():QObject(){};
+    Loger(Loger&) = delete;
+    Loger& operator=(Loger&) = delete;
+
     void setColor(TypeMessage = INFO);
 
 public:
-    Loger():QObject(){};
-    virtual ~Loger(){};
+    static Loger& Instance();
+
     void logList(string name,  TypeMessage type = INFO ,int sizeX = 0, int sizeY = 0, string* columName = nullptr, string** table = nullptr);
 
 public slots:
-    void logFileUpdate(QFileInfo*);
+    void logFileUpdate(QString name, bool exist, qint64 size, QString date);
 };
 
 #endif // LOGER_H
