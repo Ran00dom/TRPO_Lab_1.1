@@ -11,15 +11,15 @@ bool FileInfoRecorder::updateData()
     if (updateExist != exist || lastTimeModified != timeModified) {
         exist = updateExist;
         timeModified = lastTimeModified;
+        sizeFile = this->size();
         return true;
     }
     return false;
 }
 
-
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-int  FileManager::getFile(QString name) // получить элемент списка
+int  FileManager::getFile(QString name) const  // получить элемент списка
 {
     for (int var = 0; var < files.length(); var++) {
         if (files.at(var).fileName() == name || files.at(var).fileName() + "." + files.at(var).suffix() == name)
@@ -77,3 +77,12 @@ bool FileManager::reset(QString nameResetFile, QString dirNewFile)
     return false;
 }
 
+void FileManager::update(bool forcibly = false)
+{
+    for (int var = 0; var < files.length(); var++) {
+        if (files[var].updateData() || forcibly){
+            const FileInfoRecorder& file = files.at(var);
+            emit logUpdate(file.fileName() + "." + file.suffix(), file.exists(), file.size(), file.lastModified().date().toString() + "/" + file.lastModified().date().toString());
+        }
+    }
+}

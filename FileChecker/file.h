@@ -6,13 +6,14 @@
 #include <QObject>
 #include <QVector>
 
+
 class FileInfoRecorder:public QFileInfo
 {
 
 private:
     bool exist = true;
     QDateTime timeModified;
-    qint64 size;
+    qint64 sizeFile;
 
 public:
     FileInfoRecorder(QString dir):QFileInfo(dir){};
@@ -28,7 +29,7 @@ private:
 
 private:
     QVector<FileInfoRecorder> files;
-    int getFile(QString name);
+    int getFile(QString name) const;
 
 public:
     FileManager():QObject(){files.clear();};
