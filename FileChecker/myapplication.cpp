@@ -1,28 +1,25 @@
 #include "myapplication.h"
-#include <QDebug>
-#include <cstring>
-#include <conio.h>
-#include <QString>
+
 
 MyApplication::MyApplication(int argc, char*argv[]):QCoreApplication(argc,argv)
 {
+    connect(&thread, &QThread::started, &consol, &Console::listenCommand);
+    connect(&consol, &Console::commandInput, this,&MyApplication::listenCommand);
+    connect(&consol, &Console::destroyed, &thread, &QThread::quit);
+
     connect(this, &MyApplication::update, &manager, &FileManager::update);
     connect(&manager, &FileManager::logUpdate, &log, &Loger::logFileUpdate);
-    consolTimer = startTimer(50); // запуск таймера консоли
+
+   //consolTimer = startTimer(50); // запуск таймера консоли
     log.logList("<< The program was created by Kiryushkin Yaroslav from the group 932122 >>");
     log.logList("Call list of commands /file help | to enable file update enter /file update",WARNING);
+
+    consol.moveToThread(&thread);
+    thread.start();
 }
 
 void MyApplication::timerEvent(QTimerEvent* event)
 {
-    if (event->timerId() == consolTimer){ // проверка id таймера
-        if (_kbhit()) {
-            std::string str;
-            std::getline(std::cin,str); // чтение из консоли
-            listenCommand(str); // проверка ввода
-        }
-    }
-    else
         if (event->timerId() == listenTimer){
             emit update();
         }
@@ -30,19 +27,19 @@ void MyApplication::timerEvent(QTimerEvent* event)
             QCoreApplication::timerEvent(event);
 }
 
-bool MyApplication::listenCommand(std::string str) // определяет и выполняет команды
+bool MyApplication::listenCommand(QString str) // определяет и выполняет команды
 {
-    if (!str.empty()) //  строка не пустая
+    if (!str.isEmpty()) //  строка не пустая
     {
         int countWord; // количество строк
-        std::string *command = spliter(str, &countWord); // разделяем троку на слова
+        QString *command = spliter(str, &countWord); // разделяем троку на слова
         if (command[0] == "/file" && countWord > 0) // проверяем ключивое слово и параметры за ним
             switch (commandCheck(command[1])) {  // поиск параметра по индексу
 
 
             case COMMAND_ADD: {
                 if (countWord == 3) {
-                    QString str(command[2].c_str());
+                    QString str(command[2]);
                     if (manager.addFile(str))
                         log.logList("file CREATE successfully!", ACCEPT);
                     else
@@ -57,7 +54,7 @@ bool MyApplication::listenCommand(std::string str) // определяет и в
 
             case COMMAND_DROP:{
                 if (countWord == 3) {
-                    QString str(command[2].c_str());
+                    QString str(command[2]);
                     bool isNumber;
                     int index = str.toInt(&isNumber);
                     if (isNumber)
@@ -78,7 +75,7 @@ bool MyApplication::listenCommand(std::string str) // определяет и в
 
             case COMMAND_RESET:{
                 if (countWord == 4) {
-                    QString name(command[2].c_str()), dir(command[3].c_str());
+                    QString name(command[2]), dir(command[3]);
                     if (manager.reset(name,dir))
                         log.logList("file RESET successfully!", ACCEPT);
                     else
@@ -174,7 +171,7 @@ bool MyApplication::listenCommand(std::string str) // определяет и в
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-int MyApplication::commandCheck(std::string str) // проверка индекса ключевого слова
+int MyApplication::commandCheck(QString str) // проверка индекса ключевого слова
 {
     for (int i = 0; i < numCommand; i++) {
         if (str == commands[i])
@@ -183,24 +180,24 @@ int MyApplication::commandCheck(std::string str) // проверка индек�
     return -1;
 }
 
-std::string* MyApplication::spliter(std::string str, int* countWord = nullptr) // деление строки по пробелам
+QString* MyApplication::spliter(QString str, int* countWord = nullptr) // деление строки по пробелам
 {
-    if (!str.empty())
+    if (!str.isEmpty())
     {
         int num = std::count(str.begin(),str.end(), ' ')+1;
 
-        std::string *newStr = new std::string[num];
+        QString *newStr = new QString[num];
         int j = -1;
         bool begin = false;
 
-        std::string bufer = "";
-        for (size_t i = 0 ; i < str.length(); i++){
-            if (str[i] != ' '){
+        QString bufer = "";
+        for (int i = 0 ; i < str.length(); i++){
+            if (str.at(i) != ' '){
                 if (!begin){
                     j++;
                     begin = true;
                 }
-                bufer.append(1,str[i]);
+                bufer.append(str.at(i));
             }
             else
                 if (begin){
@@ -214,7 +211,7 @@ std::string* MyApplication::spliter(std::string str, int* countWord = nullptr) /
             newStr[j] = bufer;
 
         int newString = j + 1;
-        std::string* command = new std::string[newString]; // новый массив
+        QString* command = new QString[newString]; // новый массив
         for (int var = 0; var < newString; var++) {
             command[var] =  newStr[var];
         }
