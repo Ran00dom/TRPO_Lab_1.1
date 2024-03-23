@@ -46,7 +46,6 @@ class MyApplication : public QCoreApplication
     Q_OBJECT
 
 private:
-    int consolTimer;
     int listenTimer;
     bool listenFile = false;
 
