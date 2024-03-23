@@ -1,11 +1,27 @@
 #include "myapplication.h"
 
+Console& Console::Instance()
+{
+    static Console singleInstance;
+    return singleInstance;
+}
+
+void Console::listenCommand()
+{
+    std::string s;
+    std::getline(std::cin,s);
+    QString df(s.c_str());
+    emit commandInput(df);
+};
+
+//===============================================================================================//
 
 MyApplication::MyApplication(int argc, char*argv[]):QCoreApplication(argc,argv)
 {
-    connect(&thread, &QThread::started, &consol, &Console::listenCommand);
+    connect(&consoleThread, &QThread::started, &consol, &Console::listenCommand);
     connect(&consol, &Console::commandInput, this,&MyApplication::listenCommand);
-    connect(&consol, &Console::destroyed, &thread, &QThread::quit);
+    connect(&consoleThread, &QThread::finished, &consol, &Console::deleteLater);
+    connect(this, &MyApplication::consoleListen, &consol, &Console::listenCommand);
 
     connect(this, &MyApplication::update, &manager, &FileManager::update);
     connect(&manager, &FileManager::logUpdate, &log, &Loger::logFileUpdate);
@@ -14,8 +30,8 @@ MyApplication::MyApplication(int argc, char*argv[]):QCoreApplication(argc,argv)
     log.logList("<< The program was created by Kiryushkin Yaroslav from the group 932122 >>");
     log.logList("Call list of commands /file help | to enable file update enter /file update",WARNING);
 
-    consol.moveToThread(&thread);
-    thread.start();
+    consol.moveToThread(&consoleThread);
+    consoleThread.start();
 }
 
 void MyApplication::timerEvent(QTimerEvent* event)
@@ -33,7 +49,7 @@ bool MyApplication::listenCommand(QString str) // определяет и вып
     {
         int countWord; // количество строк
         QString *command = spliter(str, &countWord); // разделяем троку на слова
-        if (command[0] == "/file" && countWord > 0) // проверяем ключивое слово и параметры за ним
+        if (command[0] == "/file" && countWord > 1) { // проверяем ключивое слово и параметры за ним
             switch (commandCheck(command[1])) {  // поиск параметра по индексу
 
 
@@ -149,10 +165,11 @@ bool MyApplication::listenCommand(QString str) // определяет и вып
 
             case COMMAND_EXIT:{
                 if (countWord == 2) {
+                    consoleThread.quit();
                     this->exit();
                     log.logList("Program completed!", WARNING);
                     log.logList("< press any button >", INFO);
-                    break;
+                    return true;
                 }
                 log.logList("command not difined!", WARNING);
                 break;
@@ -163,9 +180,17 @@ bool MyApplication::listenCommand(QString str) // определяет и вып
             default: // исключение
                 log.logList("command not difined!", WARNING);
             }
+
+        }
+        else
+            log.logList("command not difined!", WARNING);
+
+        emit consoleListen();
         delete[] command;
         return false;
     }
+    emit consoleListen();
+    log.logList("command not difined!", WARNING);
     return true;
 }
 

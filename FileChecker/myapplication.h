@@ -21,27 +21,22 @@ enum Command
 };
 
 
+
 class Console: public QObject
 {
     Q_OBJECT
 
-public:
+private:
     Console():QObject(){};
+    Console(Console&) = delete;
+    Console& operator=(Console&) = delete;
+public:
+    static Console& Instance();
 
 signals:
     void commandInput(QString);
 public slots:
-   bool listenCommand()
-   {
-       while (true)
-       {
-           std::string s;
-           std::getline(std::cin,s);
-           QString df(s.c_str());
-           emit commandInput(df);
-       }
-
-    };
+    void listenCommand();
 };
 
 
@@ -57,9 +52,9 @@ private:
 
     FileManager& manager = FileManager::Instance();
     Loger& log = Loger::Instance();
-    Console consol;
+    Console& consol = Console::Instance();
 
-    QThread thread;
+    QThread consoleThread;
 
     const int numCommand = 10;
     const QString commands[10] =
@@ -86,6 +81,7 @@ private:
 
 signals:
     void update(bool forcibly = false);
+    void consoleListen();
 public slots:
     bool listenCommand(QString);
 };
