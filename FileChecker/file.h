@@ -6,7 +6,7 @@
 #include <QObject>
 #include <QVector>
 
-class FileInfoRecorder:public QFileInfo
+class FileInfo:public QFileInfo
 {
 
 private:
@@ -15,7 +15,7 @@ private:
     qint64 sizeFile;
 
 public:
-    FileInfoRecorder(QString dir):QFileInfo(dir){};
+    FileInfo(QString dir):QFileInfo(dir){};
     bool updateData();
 };
 
@@ -24,7 +24,7 @@ class FileManager:public QObject
        Q_OBJECT
 
 private:
-    QVector<FileInfoRecorder> files;
+    QVector<FileInfo> files;
 
 private:
     FileManager():QObject(){files.clear();};

@@ -4,8 +4,8 @@
 #include "file.h"
 #include "loger.h"
 #include <QCoreApplication>
-#include <iostream>
-
+#include <QThread>
+#include <QString>
 
 enum Command
 {
@@ -21,20 +21,42 @@ enum Command
 };
 
 
+
+class Console: public QObject
+{
+    Q_OBJECT
+
+private:
+    Console():QObject(){};
+    Console(Console&) = delete;
+    Console& operator=(Console&) = delete;
+public:
+    static Console& Instance();
+
+signals:
+    void commandInput(QString);
+public slots:
+    void listenCommand();
+};
+
+
+
 class MyApplication : public QCoreApplication
 {
     Q_OBJECT
 
 private:
-    int consolTimer;
     int listenTimer;
     bool listenFile = false;
 
     FileManager& manager = FileManager::Instance();
     Loger& log = Loger::Instance();
+    Console& consol = Console::Instance();
+
+    QThread consoleThread;
 
     const int numCommand = 10;
-    const std::string commands[10] =
+    const QString commands[10] =
         {
             "/file",
             "help",
@@ -52,13 +74,15 @@ public:
     MyApplication(int argc, char*argv[]);
 
 private:
-    bool listenCommand(std::string);
-    int commandCheck(std::string);
-    std::string* spliter(std::string, int*);
+    int commandCheck(QString);
+   QString* spliter(QString, int*);
     void timerEvent(QTimerEvent*); // переопределение для таймера
 
 signals:
     void update(bool forcibly = false);
+    void consoleListen();
+public slots:
+    bool listenCommand(QString);
 };
 
 #endif // MYAPPLICATION_H

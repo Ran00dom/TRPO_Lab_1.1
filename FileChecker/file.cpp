@@ -1,6 +1,6 @@
 #include "file.h"
 
-bool FileInfoRecorder::updateData()
+bool FileInfo::updateData()
 {
     refresh();
     bool updateExist = exists();
@@ -40,7 +40,7 @@ bool FileManager::addFile(QString dir)
     QFileInfo check(dir);
     if (getFile(check.fileName()) == -1){ // проверка на существование такого файла
         int length = files.length();
-        FileInfoRecorder file(dir);
+        FileInfo file(dir);
         files.append(file);
         if (length != files.length())
             return true;
@@ -88,7 +88,7 @@ void FileManager::update(bool forcibly = false)
 {
     for (int var = 0; var < files.length(); var++) {
         if (files[var].updateData() || forcibly){
-            const FileInfoRecorder& file = files.at(var);
+            const auto& file = files.at(var);
             emit logUpdate(file.fileName(),
                            file.exists(),
                            file.size(),
