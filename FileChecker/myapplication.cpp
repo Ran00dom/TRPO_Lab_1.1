@@ -89,20 +89,6 @@ bool MyApplication::listenCommand(QString str) // определяет и вып
                 break;
             }
 
-            case COMMAND_RESET:{
-                if (countWord == 4) {
-                    QString name(command[2]), dir(command[3]);
-                    if (manager.reset(name,dir))
-                        log.logList("file RESET successfully!", ACCEPT);
-                    else
-                        log.logList("file not RESET!", ERRORS);
-
-                    break;
-                }
-                log.logList("command not difined!", WARNING);
-                break;
-            }
-
             case COMMAND_LISTEN:{ // запуск прослушивания
                 if (countWord == 2) {
                     if (!listenFile) {
@@ -143,7 +129,6 @@ bool MyApplication::listenCommand(QString str) // определяет и вып
                     log.logList("| drop [file name]   | deleting a file from the wiretap with the name [name]");
                     log.logList("| listen             | starts wiretapping if it is stopped");
                     log.logList("| mute               | stop wiretapping if it exists");
-                    log.logList("| reset [name] [dir] | replacing the wiretapped file with the name [name] with a new one from [dir]");
                     log.logList("| list               | force the states of all files to be displayed");
                     log.logList("| exit               | exit the application");
                     break;

@@ -15,7 +15,6 @@ enum Command
     COMMAND_DROP,
     COMMAND_LISTEN,
     COMMAND_MUTE,
-    COMMAND_RESET,
     COMMAND_LIST,
     COMMAND_EXIT,
 };
@@ -64,7 +63,6 @@ private:
             "drop",
             "listen",
             "mute",
-            "reset",
             "list",
             "exit",
             "empty"

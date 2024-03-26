@@ -76,14 +76,6 @@ bool FileManager::removeFile(int index)
     return false;
 }
 
-bool FileManager::reset(QString nameResetFile, QString dirNewFile)
-{
-    if (removeFile(nameResetFile))
-        if (addFile(dirNewFile))
-            return true;
-    return false;
-}
-
 void FileManager::update(bool forcibly = false)
 {
     for (int var = 0; var < files.length(); var++) {
