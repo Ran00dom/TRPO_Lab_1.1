@@ -6,6 +6,7 @@
 #include <QObject>
 #include <QVector>
 
+
 class FileInfo:public QFileInfo
 {
 
@@ -18,6 +19,7 @@ public:
     FileInfo(QString dir):QFileInfo(dir){};
     bool updateData();
 };
+
 
 class FileManager:public QObject
 {
@@ -37,7 +39,6 @@ public:
     bool addFile(QString dir);
     bool removeFile(QString name);
     bool removeFile(int index);
-    bool reset(QString nameResetFile, QString dirNewFile);
 
 signals:
     void logUpdate(QString name, bool exist, qint64 size, QString date);

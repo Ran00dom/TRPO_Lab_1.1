@@ -12,15 +12,16 @@ void Console::listenCommand()
     std::getline(std::cin,s);
     QString df(s.c_str());
     emit commandInput(df);
-};
+}
 
 //===============================================================================================//
 
 MyApplication::MyApplication(int argc, char*argv[]):QCoreApplication(argc,argv)
 {
     connect(&consoleThread, &QThread::started, &consol, &Console::listenCommand);
-    connect(&consol, &Console::commandInput, this,&MyApplication::listenCommand);
     connect(&consoleThread, &QThread::finished, &consol, &Console::deleteLater);
+
+    connect(&consol, &Console::commandInput, this,&MyApplication::listenCommand);
     connect(this, &MyApplication::consoleListen, &consol, &Console::listenCommand);
 
     connect(this, &MyApplication::update, &manager, &FileManager::update);
@@ -28,7 +29,7 @@ MyApplication::MyApplication(int argc, char*argv[]):QCoreApplication(argc,argv)
 
    //consolTimer = startTimer(50); // запуск таймера консоли
     log.logList("<< The program was created by Kiryushkin Yaroslav from the group 932122 >>");
-    log.logList("Call list of commands /file help | to enable file update enter /file update",WARNING);
+    log.logList("Call list of commands /file help | to enable file update enter /file listen",WARNING);
 
     consol.moveToThread(&consoleThread);
     consoleThread.start();
@@ -52,21 +53,18 @@ bool MyApplication::listenCommand(QString str) // определяет и вып
         if (command[0] == "/file" && countWord > 1) { // проверяем ключивое слово и параметры за ним
             switch (commandCheck(command[1])) {  // поиск параметра по индексу
 
-
             case COMMAND_ADD: {
                 if (countWord == 3) {
                     QString str(command[2]);
                     if (manager.addFile(str))
-                        log.logList("file CREATE successfully!", ACCEPT);
+                        log.logList("file ADD successfully!", ACCEPT);
                     else
-                        log.logList("file not CREATED!", ERRORS);
-
+                        log.logList("file already ADD!", WARNING);
                     break;
                 }
                 log.logList("command not difined!", WARNING);
                 break;
             }
-
 
             case COMMAND_DROP:{
                 if (countWord == 3) {
@@ -77,26 +75,12 @@ bool MyApplication::listenCommand(QString str) // определяет и вып
                         if (manager.removeFile(index))
                             log.logList("file DROPPED successfully!", ACCEPT);
                         else
-                            log.logList("file not DROPPED!", ERRORS);
+                            log.logList("file not FOUND!", WARNING);
                     else
                         if (manager.removeFile(str))
                             log.logList("file DROPPED successfully!", ACCEPT);
                         else
-                            log.logList("file not DROPPED!", ERRORS);
-                    break;
-                }
-                log.logList("command not difined!", WARNING);
-                break;
-            }
-
-            case COMMAND_RESET:{
-                if (countWord == 4) {
-                    QString name(command[2]), dir(command[3]);
-                    if (manager.reset(name,dir))
-                        log.logList("file RESET successfully!", ACCEPT);
-                    else
-                        log.logList("file not RESET!", ERRORS);
-
+                            log.logList("file not FOUND!", WARNING);
                     break;
                 }
                 log.logList("command not difined!", WARNING);
@@ -134,7 +118,6 @@ bool MyApplication::listenCommand(QString str) // определяет и вып
                 break;
             }
 
-
             case COMMAND_HELP:{
                 if (countWord == 2) {
                     log.logList("< COMMAND LIST >", MESSAGE);
@@ -143,7 +126,6 @@ bool MyApplication::listenCommand(QString str) // определяет и вып
                     log.logList("| drop [file name]   | deleting a file from the wiretap with the name [name]");
                     log.logList("| listen             | starts wiretapping if it is stopped");
                     log.logList("| mute               | stop wiretapping if it exists");
-                    log.logList("| reset [name] [dir] | replacing the wiretapped file with the name [name] with a new one from [dir]");
                     log.logList("| list               | force the states of all files to be displayed");
                     log.logList("| exit               | exit the application");
                     break;
@@ -151,7 +133,6 @@ bool MyApplication::listenCommand(QString str) // определяет и вып
                 log.logList("command not difined!", WARNING);
                 break;
             }
-
 
             case COMMAND_LIST:{
                 if (countWord == 2) {
@@ -174,7 +155,6 @@ bool MyApplication::listenCommand(QString str) // определяет и вып
                 log.logList("command not difined!", WARNING);
                 break;
             }
-
 
             break;
             default: // исключение

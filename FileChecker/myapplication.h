@@ -15,7 +15,6 @@ enum Command
     COMMAND_DROP,
     COMMAND_LISTEN,
     COMMAND_MUTE,
-    COMMAND_RESET,
     COMMAND_LIST,
     COMMAND_EXIT,
 };
@@ -64,7 +63,6 @@ private:
             "drop",
             "listen",
             "mute",
-            "reset",
             "list",
             "exit",
             "empty"
@@ -75,7 +73,7 @@ public:
 
 private:
     int commandCheck(QString);
-   QString* spliter(QString, int*);
+    QString* spliter(QString, int*);
     void timerEvent(QTimerEvent*); // переопределение для таймера
 
 signals:
