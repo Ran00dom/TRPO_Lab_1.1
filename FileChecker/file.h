@@ -6,6 +6,7 @@
 #include <QObject>
 #include <QVector>
 
+
 class FileInfo:public QFileInfo
 {
 
@@ -18,6 +19,7 @@ public:
     FileInfo(QString dir):QFileInfo(dir){};
     bool updateData();
 };
+
 
 class FileManager:public QObject
 {

@@ -12,7 +12,7 @@ void Console::listenCommand()
     std::getline(std::cin,s);
     QString df(s.c_str());
     emit commandInput(df);
-};
+}
 
 //===============================================================================================//
 

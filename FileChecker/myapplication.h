@@ -73,7 +73,7 @@ public:
 
 private:
     int commandCheck(QString);
-   QString* spliter(QString, int*);
+    QString* spliter(QString, int*);
     void timerEvent(QTimerEvent*); // переопределение для таймера
 
 signals:
