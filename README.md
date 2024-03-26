@@ -19,5 +19,5 @@
 4. <Singleton> Loger выводит уведомления в консоль об изменениях файла.
 
 ## UML-диаграмма
-![Иллюстрация к проекту](https://github.com/Ran00dom/TRPO_Lab_1.1/raw//task_description/UML-класс_8.png)
+![Иллюстрация к проекту](https://github.com/Ran00dom/TRPO_Lab_1.1/raw//task_description/UML-класс_9.png)
 
