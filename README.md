@@ -21,3 +21,6 @@
 ## UML-диаграмма
 ![Иллюстрация к проекту](https://github.com/Ran00dom/TRPO_Lab_1.1/raw//task_description/UML-класс_11.png)
 
+Система сборки: Qmake
+
+Фреймворк: QT 5.15.2
